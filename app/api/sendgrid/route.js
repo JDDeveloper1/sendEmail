@@ -1,8 +1,6 @@
 import mail from "@sendgrid/mail";
 import { NextResponse } from "next/server";
 
-mail.setApiKey(process.env.SENDGRID_API_KEY || "");
-
 export async function POST(request) {
   let response = {};
   const body = await request.json();
@@ -14,6 +12,8 @@ export async function POST(request) {
     };
     return NextResponse.json(response);
   }
+
+  mail.setApiKey(process.env.SENDGRID_API_KEY || "");
   const message = `
         FullName: ${body.fullName}
         Email: ${body.email}
@@ -56,19 +56,18 @@ export async function POST(request) {
       </html>
     `,
   };
-  await mail
-    .send(data)
-    .then(() => {
-      response = {
-        status: "success",
-        message: "Your message was sent. I'll be in contact shortly.",
-      };
-    })
-    .catch((error) => {
-      response = {
-        status: "error",
-        message: `Message failed to send with error, ${error}`,
-      };
-    });
+  try {
+    await mail.send(data);
+    response = {
+      status: "success",
+      message: "Your message was sent. I'll be in contact shortly.",
+    };
+  } catch (error) {
+    console.error(error);
+    response = {
+      status: "error",
+      message: `Message failed to send with error, ${error.message}`,
+    };
+  }
   return NextResponse.json(response);
 }
