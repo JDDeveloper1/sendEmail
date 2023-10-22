@@ -13,7 +13,7 @@ export async function POST(request) {
     return NextResponse.json(response);
   }
 
-  mail.setApiKey(process.env.SENDGRID_API_KEY || "");
+  mail.setApiKey(process.env.SENDGRID_API_KEY);
   const message = `
         FullName: ${body.fullName}
         Email: ${body.email}
