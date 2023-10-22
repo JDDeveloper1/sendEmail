@@ -1,7 +1,7 @@
 import mail from "@sendgrid/mail";
 import { NextResponse } from "next/server";
 
-mail.setApiKey(process.env.SENDGRID_API_KEY || "");
+mail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export async function POST(request) {
   let response = {};
